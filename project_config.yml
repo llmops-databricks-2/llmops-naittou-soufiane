@@ -1,0 +1,44 @@
+# Project configuration for the LLMOps course, filled in for you at onboarding.
+# Resources are provisioned at onboarding except the volume, which you create during the course.
+
+# Your usage policy: set it on every serverless job, endpoint and app you create.
+usage_policy_id: "674b84ab-63b9-3f87-817d-7ba554be0a99"
+
+# Lakebase projects may be shared across environments; Unity Catalog
+# schemas remain separate. Your cohort provisions the Lakebase values below.
+
+# Development: your own schema in the dev catalog, which you manage and work in.
+dev:
+  catalog: "llmops_dev"
+  schema: "naittou_soufiane"
+  volume: "arxiv_files"
+  llm_endpoint: "course_ops.gateway.chat"
+  embedding_endpoint: "course_ops.gateway.embed"
+  warehouse_id: "87247773d98c759b"
+  experiment_path: "/llmops/naittou_soufiane-dev"
+  # Your provisioned Lakebase project.
+  lakebase_instance: "lb-llmops-naittou-soufiane"
+
+# Acceptance: your schema in the acceptance catalog, written by your deploys; you read it.
+acc:
+  catalog: "llmops_acc"
+  schema: "naittou_soufiane"
+  volume: "arxiv_files"
+  llm_endpoint: "course_ops.gateway.chat"
+  embedding_endpoint: "course_ops.gateway.embed"
+  warehouse_id: "87247773d98c759b"
+  experiment_path: "/llmops/naittou_soufiane-acc"
+  # Your provisioned Lakebase project for this environment.
+  lakebase_instance: "lb-llmops-naittou-soufiane"
+
+# Production: your schema in the production catalog, written by your deploys; you read it.
+prd:
+  catalog: "llmops_prd"
+  schema: "naittou_soufiane"
+  volume: "arxiv_files"
+  llm_endpoint: "course_ops.gateway.chat"
+  embedding_endpoint: "course_ops.gateway.embed"
+  warehouse_id: "87247773d98c759b"
+  experiment_path: "/llmops/naittou_soufiane-prd"
+  # Your provisioned Lakebase project for this environment.
+  lakebase_instance: "lb-llmops-naittou-soufiane"
