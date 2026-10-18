@@ -1,5 +1,16 @@
 # llmops-naittou-soufiane
 
+## Use case: Databricks Docs Curator
+
+An assistant for data engineers, data scientists and platform administrators that answers questions about
+Declarative Automation Bundles (formerly Databricks Asset Bundles) and Lakeflow Jobs with valid code
+snippets and links to the documentation pages it used. The MVP knowledge base is 50 pages from
+docs.databricks.com.
+
+- [Use case](docs/use_case.md): users, data, example interactions, MVP scope
+- [Architecture](docs/architecture.md): target system and lecture roadmap
+- [Lecture 1](docs/lecture_1.md): docs metadata ingestion, bundle job, model service experiments
+
 Your repository for the LLMOps course on Databricks. Everything you need in
 the course workspace was provisioned for you before you got this repo, and every id is already in
 `project_config.yml`: you configure nothing.
