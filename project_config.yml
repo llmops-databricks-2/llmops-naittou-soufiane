@@ -11,7 +11,7 @@ usage_policy_id: "674b84ab-63b9-3f87-817d-7ba554be0a99"
 dev:
   catalog: "llmops_dev"
   schema: "naittou_soufiane"
-  volume: "arxiv_files"
+  volume: "docs_files"
   llm_endpoint: "course_ops.gateway.chat"
   embedding_endpoint: "course_ops.gateway.embed"
   warehouse_id: "87247773d98c759b"
@@ -23,7 +23,7 @@ dev:
 acc:
   catalog: "llmops_acc"
   schema: "naittou_soufiane"
-  volume: "arxiv_files"
+  volume: "docs_files"
   llm_endpoint: "course_ops.gateway.chat"
   embedding_endpoint: "course_ops.gateway.embed"
   warehouse_id: "87247773d98c759b"
@@ -35,7 +35,7 @@ acc:
 prd:
   catalog: "llmops_prd"
   schema: "naittou_soufiane"
-  volume: "arxiv_files"
+  volume: "docs_files"
   llm_endpoint: "course_ops.gateway.chat"
   embedding_endpoint: "course_ops.gateway.embed"
   warehouse_id: "87247773d98c759b"
