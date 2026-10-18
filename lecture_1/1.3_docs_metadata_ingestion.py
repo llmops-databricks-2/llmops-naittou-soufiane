@@ -3,6 +3,8 @@
 # Databricks MAGIC comments are executable notebook cells.
 """Ingest the metadata of Databricks documentation pages into a Delta table."""
 
+# COMMAND ----------
+
 # MAGIC %md
 # MAGIC # Lecture 1.3: Docs Metadata Ingestion
 # MAGIC
