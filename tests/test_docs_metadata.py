@@ -28,6 +28,13 @@ def test_parse_sitemap_applies_limit() -> None:
     assert [page["product_area"] for page in pages] == ["bundles", "bundles", "jobs"]
 
 
+def test_parse_sitemap_stops_within_first_prefix() -> None:
+    """A limit below the bundles count returns bundles pages only."""
+    pages = parse_sitemap((FIXTURES / "sitemap.xml").read_text(), limit=1)
+
+    assert [page["doc_id"] for page in pages] == ["dev-tools/bundles"]
+
+
 def test_parse_page_head_extracts_metadata() -> None:
     """Title loses the site suffix; breadcrumb is ordered by position."""
     metadata = parse_page_head((FIXTURES / "bundles_page.html").read_text())

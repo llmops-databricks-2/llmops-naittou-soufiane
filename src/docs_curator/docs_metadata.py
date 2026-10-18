@@ -44,19 +44,26 @@ def parse_sitemap(sitemap_xml: str, prefixes: dict[str, str] = PRODUCT_AREAS, li
 
     """
     root = ET.fromstring(sitemap_xml)
-    urls = [loc.text.strip() for loc in root.iterfind("sm:url/sm:loc", _SITEMAP_NS) if loc.text]
+    urls = sorted(loc.text.strip() for loc in root.iterfind("sm:url/sm:loc", _SITEMAP_NS) if loc.text)
 
     pages = []
     for prefix, product_area in prefixes.items():
-        for url in sorted(urls):
-            if url.startswith(DOCS_ROOT + prefix):
+        prefix_url = DOCS_ROOT + prefix
+        for url in urls:
+            if url.startswith(prefix_url):
+                if len(pages) >= limit:
+                    return pages
                 doc_id = url.removeprefix(DOCS_ROOT).strip("/")
                 pages.append({"url": url, "doc_id": doc_id, "product_area": product_area})
-    return pages[:limit]
+    return pages
 
 
 class _PageHeadParser(HTMLParser):
-    """Collect the metadata of a Docusaurus documentation page."""
+    """Collect the metadata of a Docusaurus documentation page.
+
+    HTMLParser calls the handle_* methods from inside feed(), once per tag and text run, so the
+    attributes are filled in when feed() and close() return.
+    """
 
     def __init__(self) -> None:
         super().__init__()
@@ -119,6 +126,7 @@ def parse_page_head(html: str) -> dict:
     """
     parser = _PageHeadParser()
     parser.feed(html)
+    parser.close()
     title = _TITLE_SUFFIX.sub("", parser.title or "").strip() or None
     last_updated = date.fromisoformat(parser.last_updated[:10]) if parser.last_updated else None
     return {
