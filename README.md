@@ -1,5 +1,16 @@
 # llmops-naittou-soufiane
 
+## Use case: Databricks Docs Curator
+
+An assistant for data engineers, data scientists and platform administrators that answers questions about
+Declarative Automation Bundles (formerly Databricks Asset Bundles) and Lakeflow Jobs with valid code
+snippets and links to the documentation pages it used. The MVP knowledge base is 50 pages from
+docs.databricks.com.
+
+- [Use case](docs/use_case.md): users, data, example interactions, MVP scope
+- [Architecture](docs/architecture.md): target system and lecture roadmap
+- [Lecture 1](docs/lecture_1.md): docs metadata ingestion, bundle job, model service experiments
+
 Your repository for the LLMOps course on Databricks. Everything you need in
 the course workspace was provisioned for you before you got this repo, and every id is already in
 `project_config.yml`: you configure nothing.
@@ -11,7 +22,7 @@ the course workspace was provisioned for you before you got this repo, and every
 | Your schema in development, which you manage | `llmops_dev.naittou_soufiane` |
 | Your schema in acceptance, which you read | `llmops_acc.naittou_soufiane` |
 | Your schema in production, which you read | `llmops_prd.naittou_soufiane` |
-| Suggested volume name (create during the course) | `arxiv_files`, such as `llmops_dev.naittou_soufiane.arxiv_files` |
+| Suggested volume name (create during the course) | `docs_files`, such as `llmops_dev.naittou_soufiane.docs_files` |
 | SQL warehouse id | `87247773d98c759b` |
 | Usage policy id | `674b84ab-63b9-3f87-817d-7ba554be0a99` |
 | MLflow experiments | Dev: `/llmops/naittou_soufiane-dev`; acc: `/llmops/naittou_soufiane-acc`; prd: `/llmops/naittou_soufiane-prd` |
@@ -57,7 +68,7 @@ suspension after five idle minutes. Creating extra branches or computes can incr
 
 ## What is in the repo
 
-- `src/arxiv_curator/`: starts with `config.py`, which loads `project_config.yml`.
+- `src/docs_curator/`: starts with `config.py`, which loads `project_config.yml`.
   Add the other course modules as you work through the lectures.
 - `lecture_1/`, `lecture_2/` and so on, when you add them: copy a lecture's folder from the course
   code as it is, to the root of this repo, where its notebooks find `project_config.yml` one level up.

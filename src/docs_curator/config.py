@@ -1,4 +1,4 @@
-"""Configuration management for Arxiv Curator."""
+"""Configuration management for the Docs Curator."""
 
 import os
 from pathlib import Path
@@ -19,7 +19,7 @@ class ProjectConfig(BaseModel):
     warehouse_id: str = Field(..., description="Warehouse ID")
     genie_space_id: str | None = Field(None, description="Genie space ID for MCP integration")
     system_prompt: str = Field(
-        default="You are a helpful AI assistant that helps users find and understand research papers.",
+        default="You are a helpful AI assistant that helps users find and understand Databricks documentation.",
         description="System prompt for the agent",
     )
 

@@ -1,0 +1,28 @@
+# The "Prepare data" job of the Docs Curator, lecture 1 step: one serverless notebook task that
+# installs your docs_curator wheel, fetches the metadata of the bundles and jobs documentation
+# pages and overwrites the docs_metadata table in your schema of the target's catalog
+# (dev: llmops_dev.naittou_soufiane.docs_metadata).
+# The daily schedule is paused; development mode pauses it in dev anyway.
+resources:
+  jobs:
+    docs_metadata:
+      name: job-docs-metadata-naittou-soufiane-${bundle.target}
+      budget_policy_id: "674b84ab-63b9-3f87-817d-7ba554be0a99"
+      schedule:
+        quartz_cron_expression: "0 0 6 * * ?"
+        timezone_id: "Europe/Amsterdam"
+        pause_status: PAUSED
+      environments:
+        - environment_key: default
+          spec:
+            environment_version: "6"
+            dependencies:
+              - ../dist/*.whl
+
+      tasks:
+        - task_key: docs_metadata_ingestion
+          environment_key: default
+          notebook_task:
+            notebook_path: ../lecture_1/1.3_docs_metadata_ingestion.py
+            base_parameters:
+              env: ${bundle.target}
