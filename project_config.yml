@@ -13,11 +13,13 @@ dev:
   schema: "naittou_soufiane"
   volume: "docs_files"
   llm_endpoint: "course_ops.gateway.chat"
-  embedding_endpoint: "course_ops.gateway.embed"
+  # course_ops.gateway.embed can't be used: ai_query doesn't support custom Unity Gateway model
+  # services yet (https://docs.databricks.com/aws/en/ai-gateway/query-model-services#limitations)
+  embedding_endpoint: "databricks-gte-large-en"
   warehouse_id: "87247773d98c759b"
   experiment_path: "/llmops/naittou_soufiane-dev"
   # Your provisioned Lakebase project.
-  lakebase_instance: "lb-llmops-naittou-soufiane"
+  lakebase_project_id: "lb-llmops-naittou-soufiane"
 
 # Acceptance: your schema in the acceptance catalog, written by your deploys; you read it.
 acc:
@@ -25,11 +27,13 @@ acc:
   schema: "naittou_soufiane"
   volume: "docs_files"
   llm_endpoint: "course_ops.gateway.chat"
-  embedding_endpoint: "course_ops.gateway.embed"
+  # course_ops.gateway.embed can't be used: ai_query doesn't support custom Unity Gateway model
+  # services yet (https://docs.databricks.com/aws/en/ai-gateway/query-model-services#limitations)
+  embedding_endpoint: "databricks-gte-large-en"
   warehouse_id: "87247773d98c759b"
   experiment_path: "/llmops/naittou_soufiane-acc"
   # Your provisioned Lakebase project for this environment.
-  lakebase_instance: "lb-llmops-naittou-soufiane"
+  lakebase_project_id: "lb-llmops-naittou-soufiane"
 
 # Production: your schema in the production catalog, written by your deploys; you read it.
 prd:
@@ -37,8 +41,10 @@ prd:
   schema: "naittou_soufiane"
   volume: "docs_files"
   llm_endpoint: "course_ops.gateway.chat"
-  embedding_endpoint: "course_ops.gateway.embed"
+  # course_ops.gateway.embed can't be used: ai_query doesn't support custom Unity Gateway model
+  # services yet (https://docs.databricks.com/aws/en/ai-gateway/query-model-services#limitations)
+  embedding_endpoint: "databricks-gte-large-en"
   warehouse_id: "87247773d98c759b"
   experiment_path: "/llmops/naittou_soufiane-prd"
   # Your provisioned Lakebase project for this environment.
-  lakebase_instance: "lb-llmops-naittou-soufiane"
+  lakebase_project_id: "lb-llmops-naittou-soufiane"

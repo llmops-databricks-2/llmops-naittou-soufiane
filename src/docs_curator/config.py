@@ -14,9 +14,11 @@ class ProjectConfig(BaseModel):
     db_schema: str = Field(..., description="Schema name", alias="schema")
     volume: str = Field(..., description="Volume name")
     llm_endpoint: str = Field(..., description="AI Gateway chat model service name")
-    embedding_endpoint: str = Field(..., description="AI Gateway embedding model service name")
+    embedding_endpoint: str = Field(..., description="Embedding endpoint name, callable from ai_query")
     experiment_path: str = Field(..., description="MLflow experiment path for this environment")
     warehouse_id: str = Field(..., description="Warehouse ID")
+    lakebase_project_id: str = Field(..., description="Lakebase project ID")
+    usage_policy_id: str | None = Field(None, description="Usage policy id")
     genie_space_id: str | None = Field(None, description="Genie space ID for MCP integration")
     system_prompt: str = Field(
         default="You are a helpful AI assistant that helps users find and understand Databricks documentation.",
@@ -46,7 +48,11 @@ class ProjectConfig(BaseModel):
         if env not in config_data:
             raise ValueError(f"Environment '{env}' not found in config file")
 
-        return cls(**config_data[env])
+        env_config = config_data[env]
+        if "usage_policy_id" in config_data:
+            env_config["usage_policy_id"] = config_data["usage_policy_id"]
+
+        return cls(**env_config)
 
     @property
     def schema(self) -> str:
