@@ -10,6 +10,7 @@ docs.databricks.com.
 - [Use case](docs/use_case.md): users, data, example interactions, MVP scope
 - [Architecture](docs/architecture.md): target system and lecture roadmap
 - [Lecture 1](docs/lecture_1.md): docs metadata ingestion, bundle job, model service experiments
+- [Lecture 2](docs/lecture_2.md): page parsing, chunking strategies, Lakebase pgvector search
 
 Your repository for the LLMOps course on Databricks. Everything you need in
 the course workspace was provisioned for you before you got this repo, and every id is already in
@@ -50,13 +51,15 @@ The `databricks-openai` package is not included in this repo’s dependencies. T
 are available through the installed `openai` client with the workspace base URL
 `/ai-gateway/mlflow/v1` and Databricks authentication.
 
-`embedding_endpoint` is a gateway model service despite the existing field name. Generate
-vectors through its embeddings API before storing them in pgvector. It is not a managed
-Vector Search index’s `embedding_model_endpoint_name`.
+Since lecture 2, `embedding_endpoint` in `project_config.yml` is the `databricks-gte-large-en`
+Foundation Model API endpoint instead of `course_ops.gateway.embed`: the chunks are embedded with
+`ai_query`, which doesn't support custom Unity Gateway model services yet. Both serve GTE Large
+(1,024 dimensions).
 
 ## Lakebase
 
-The `lakebase_instance` value in `project_config.yml` identifies your Lakebase project.
+The `lakebase_project_id` value in `project_config.yml` (`lakebase_instance` before lecture 2)
+identifies your Lakebase project.
 All three environments share it; your Unity Catalog schemas remain separate.
 Onboarding does not create an application database or install pgvector. Create the database
 and extensions you need during the course. A Vector Search endpoint is not provisioned.
