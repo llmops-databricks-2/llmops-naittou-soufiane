@@ -139,9 +139,14 @@ def parse_page_head(html: str) -> dict:
 
 
 @backoff.on_exception(backoff.expo, requests.RequestException, max_tries=3)
-def _get(session: requests.Session, url: str) -> str:
+def fetch_text(session: requests.Session, url: str) -> str:
+    """GET a page as text, retrying transient HTTP errors."""
     response = session.get(url, timeout=30)
     response.raise_for_status()
+    # docs.databricks.com sends "Content-Type: text/html" without a charset, so requests would
+    # decode the UTF-8 pages as ISO-8859-1 and garble every non-ASCII character.
+    if "charset" not in response.headers.get("Content-Type", "").lower():
+        response.encoding = "utf-8"
     return response.text
 
 
@@ -160,11 +165,11 @@ def fetch_docs_metadata(
 
     """
     with requests.Session() as session:
-        pages = parse_sitemap(_get(session, SITEMAP_URL), prefixes, limit)
+        pages = parse_sitemap(fetch_text(session, SITEMAP_URL), prefixes, limit)
         logger.info(f"Selected {len(pages)} pages from the sitemap")
 
         records = []
         for page in pages:
-            records.append({**page, **parse_page_head(_get(session, page["url"]))})
+            records.append({**page, **parse_page_head(fetch_text(session, page["url"]))})
             time.sleep(delay_seconds)
     return records

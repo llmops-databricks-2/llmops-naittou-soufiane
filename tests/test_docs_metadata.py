@@ -3,7 +3,9 @@
 from datetime import date
 from pathlib import Path
 
-from docs_curator.docs_metadata import parse_page_head, parse_sitemap
+import requests
+
+from docs_curator.docs_metadata import fetch_text, parse_page_head, parse_sitemap
 
 FIXTURES = Path(__file__).resolve().parent / "fixtures"
 
@@ -57,3 +59,17 @@ def test_parse_page_head_tolerates_missing_metadata() -> None:
         "breadcrumb": [],
         "last_updated": None,
     }
+
+
+def test_fetch_text_decodes_utf8_when_no_charset_is_sent() -> None:
+    """docs.databricks.com sends text/html without a charset; the page is UTF-8, not ISO-8859-1."""
+    response = requests.Response()
+    response.status_code = 200
+    response.headers["Content-Type"] = "text/html"
+    response._content = "Supported resources\u200b – it’s".encode()
+
+    class Session:
+        def get(self, url: str, timeout: int) -> requests.Response:
+            return response
+
+    assert fetch_text(Session(), "https://docs.databricks.com/aws/en/x") == "Supported resources\u200b – it’s"
