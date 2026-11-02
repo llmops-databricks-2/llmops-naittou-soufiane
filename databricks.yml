@@ -5,11 +5,14 @@ bundle:
   name: llmops-naittou-soufiane
 
 # The course package is built as a wheel and installed in every job environment.
+# dynamic_version appends the build time to the wheel's version: serverless reuses an environment
+# whose dependency path is unchanged, so a redeploy of the same version.txt would run the old code.
 artifacts:
   default:
     type: whl
     build: uv build
     path: .
+    dynamic_version: true
 
 include:
   - resources/*.yml
