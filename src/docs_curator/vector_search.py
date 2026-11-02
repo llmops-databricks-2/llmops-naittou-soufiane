@@ -2,14 +2,13 @@
 
 from __future__ import annotations
 
-import os
-import urllib.parse
 from typing import Any
 
 import psycopg
 from databricks.sdk import WorkspaceClient
 from loguru import logger
 
+from docs_curator import lakebase
 from docs_curator.config import ProjectConfig
 
 RESULT_COLUMNS = "id, doc_id, title, section, product_area, url, has_code, text"
@@ -37,29 +36,9 @@ class LakebasePgVectorManager:
         # `text` already starts with the page title and section (chunking.contextual_text).
         self.text_expr = "to_tsvector('english', text)"
 
-    def _get_connection_string(self) -> str:
-        """Create a short-lived Lakebase connection string."""
-        workspace = self.workspace or WorkspaceClient()
-        postgres_api = workspace.postgres
-        endpoint_name = os.environ.get("LAKEBASE_ENDPOINT")
-        if endpoint_name:
-            host = os.environ.get("PGHOST")
-            database = os.environ.get("PGDATABASE", "databricks_postgres")
-        else:
-            project_name = f"projects/{self.lakebase_project_id}"
-            branch = next(iter(postgres_api.list_branches(parent=project_name)))
-            endpoint = next(iter(postgres_api.list_endpoints(parent=branch.name)))
-            endpoint_name = endpoint.name
-            host = endpoint.status.hosts.host
-            database = "databricks_postgres"
-        credential = postgres_api.generate_database_credential(endpoint=endpoint_name)
-        client_id = os.environ.get("DATABRICKS_CLIENT_ID")
-        username = urllib.parse.quote_plus(client_id or workspace.current_user.me().user_name)
-        return f"postgresql://{username}:{credential.token}@{host}:5432/{database}?sslmode=require"
-
     def connection(self) -> psycopg.Connection:
         """Open a Lakebase connection using a fresh workspace credential."""
-        return psycopg.connect(self._get_connection_string())
+        return lakebase.connect(self.lakebase_project_id, self.workspace)
 
     def ensure_extension(self) -> None:
         """Enable pgvector.

@@ -11,6 +11,7 @@ docs.databricks.com.
 - [Architecture](docs/architecture.md): target system and lecture roadmap
 - [Lecture 1](docs/lecture_1.md): docs metadata ingestion, bundle job, model service experiments
 - [Lecture 2](docs/lecture_2.md): page parsing, chunking strategies, Lakebase pgvector search
+- [Lecture 3](docs/lecture_3.md): agent tools (search_docs, Genie MCP), orchestration, Lakebase session memory
 
 Your repository for the LLMOps course on Databricks. Everything you need in
 the course workspace was provisioned for you before you got this repo, and every id is already in

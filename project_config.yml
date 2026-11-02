@@ -20,6 +20,9 @@ dev:
   experiment_path: "/llmops/naittou_soufiane-dev"
   # Your provisioned Lakebase project.
   lakebase_project_id: "lb-llmops-naittou-soufiane"
+  # Genie space over docs_metadata, created by lecture_3/3.2_genie_mcp.py (docs_curator.genie). Not set in
+  # acc and prd yet: their docs_metadata tables are written by the acc and prd deployments, which don't run yet.
+  genie_space_id: "01f1d5d1b11d143bbcfe7aaa526de9fd"
 
 # Acceptance: your schema in the acceptance catalog, written by your deploys; you read it.
 acc:

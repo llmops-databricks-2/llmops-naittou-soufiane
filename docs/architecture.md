@@ -14,14 +14,14 @@ flowchart LR
         parse["Parse HTML<br/>(doc_pages)"]
         parsed[("parsed_docs<br/>Delta table")]
         chunks[("docs_chunks<br/>Delta table + embeddings")]
-        vs["Managed MCP<br/>Lakebase pgvector<br/>(Synced Table)"]
+        vs[("Lakebase pgvector<br/>(Synced Table)")]
         meta -->|writes| store -->|exposes| genie
         meta -->|doc ids| pages -->|docs| parse -->|writes| parsed -->|chunks| chunks -->|syncs| vs
     end
 
     subgraph agent["Agent — Databricks app or model serving endpoint"]
         direction TB
-        tools["Tools"]
+        tools["Tools<br/>search_docs · Genie MCP"]
         gateway["AI Gateway<br/>course_ops.gateway.chat"]
         memory[("Memory · Lakebase")]
         tracing["MLflow Tracing"]
@@ -49,7 +49,7 @@ flowchart LR
     end
 
     genie -. MCP tools .-> tools
-    vs -. MCP tools .-> tools
+    vs -. search_docs<br/>custom tool .-> tools
     ship -->|deploys| agent
     app -->|calls| agent
     tracing -->|writes traces| synced
@@ -59,8 +59,10 @@ flowchart LR
     classDef mcp fill:#ffffff,stroke:#dc2626,stroke-width:2px,color:#b91c1c
     classDef lecture1 fill:#1d4ed8,stroke:#1e3a8a,stroke-width:2px,color:#ffffff
     classDef lecture2 fill:#7c3aed,stroke:#4c1d95,stroke-width:2px,color:#ffffff
-    class tools,memory,tracing,log,ship,app,inference,synced,evaluate,dashboard box
+    classDef lecture3 fill:#0f766e,stroke:#134e4a,stroke-width:2px,color:#ffffff
+    class tracing,log,ship,app,inference,synced,evaluate,dashboard box
     class genie mcp
+    class tools,memory lecture3
     class meta,store,gateway lecture1
     class pages,parse,parsed,chunks,vs lecture2
 
@@ -88,18 +90,18 @@ This job builds the knowledge base, in two branches that start from the same lis
 - **Process doc pages → parse HTML → `parsed_docs` → `docs_chunks` → Lakebase pgvector.** Using the page ids
   from the metadata table, the job saves each new or updated page to the `docs_files` volume, parses its article
   into elements (`parsed_docs`), and writes embedded section chunks to `docs_chunks`. A Lakebase Synced Table
-  copies the chunks into Postgres, where pgvector serves semantic, filtered and hybrid search; it will be
-  exposed through a second managed MCP server.
+  copies the chunks into Postgres, where pgvector serves semantic, filtered and hybrid search. The agent
+  calls it through `search_docs`, a custom function tool: no managed MCP server serves Lakebase pgvector.
 
 ### Agent (Databricks app or model serving endpoint)
 
 The agent answers a question in a loop:
 
-- **Tools**: MCP tools call the Genie space and the vector index (dotted arrows) to fetch matching
-  pages and chunks.
+- **Tools**: `search_docs` (custom function over Lakebase pgvector) fetches matching chunks; the Genie space's
+  managed MCP tools answer questions about the page catalog (dotted arrows). See [lecture 3](lecture_3.md).
 - **AI Gateway**: the chat model (`course_ops.gateway.chat`) reasons over the retrieved context and decides
   whether to call another tool or answer, citing page URLs.
-- **Memory · Lakebase**: keeps the conversation state between turns.
+- **Memory · Lakebase**: stores each turn by session id and replays the last turns on the next request.
 - **MLflow Tracing**: records every step (tool calls, model calls, latency, tokens) as traces.
 
 ### 2 · Deploy the agent (Lakeflow job, on demand)
@@ -124,6 +126,7 @@ valid YAML, and updates a dashboard, so quality regressions show up without anyo
 |---|---|
 | Solid blue node | Built in lecture 1 |
 | Solid purple node | Built in lecture 2 |
+| Solid teal node | Built in lecture 3 |
 | Red border | Managed MCP server |
 | Green group | Scheduled job, runs unattended |
 | Yellow group | On-demand job, human-operated |
