@@ -1,0 +1,20 @@
+<!doctype html><html lang=en><head><title>Deployment modes | Databricks on AWS</title></head><body>
+<nav><p>Navigation text that is not part of the article</nav>
+<article><div class="theme-doc-markdown markdown"><header><h1>Deployment modes<a href=#top class=hash-link>&#8203;</a></h1></header>
+<p>Bundles support <code>development</code> and <code>production</code> modes.
+<p>Choose a mode per target:
+<ul><li>Development, for iterating
+<li>Production, for <strong>scheduled</strong> runs<p>with a service principal</ul>
+<div class=theme-admonition><div class=admonitionHeading>note</div><div class=admonitionContent><p>Modes are optional.</div></div>
+<h2 class=anchor id=development-mode>Development mode<a href=#development-mode class=hash-link>&#8203;</a></h2>
+<p>Set the mode on the target:
+<div class=codeBlockContainer><pre tabindex=0 class="prism-code language-yaml codeBlock"><code class=codeBlockLines><div class=token-line><span class="token key atrule">targets</span><span class=token-punctuation>:</span><br/></div><div class=token-line><span class=token-plain>  </span><span class="token key atrule">dev</span><span>:</span><br/></div><div class=token-line><span class=token-plain>    </span><span class="token key atrule">mode</span><span>:</span><span class=token-plain> development</span><br/></div></code></pre></div>
+<p><img src=/aws/en/assets/images/deploy-dialog.png alt="Deploy to dev dialog" width=600>
+<h3 id=presets>Presets</h3>
+<table><thead><tr><th>Preset<th>Effect</thead><tbody><tr><td><code>name_prefix</code><td>Prefixes resource names<tr><td><code>pipelines_development</code><td>Runs pipelines in development mode</tbody></table>
+<div class=table-expand-backdrop role=presentation></div><div class=table-expand-card><form class=table-expand-bar method=dialog><button class=table-expand-close>x</button></form><div class=table-expand-scroll><table><thead><tr><th>Preset<th>Effect</thead><tbody><tr><td><code>name_prefix</code><td>Prefixes resource names<tr><td><code>pipelines_development</code><td>Runs pipelines in development mode</tbody></table></div></div>
+<h2 id=production-mode>Production mode</h2>
+<p>Production mode validates the deployment.
+</div><footer class=theme-doc-footer><p>Last updated on Sep 11, 2026</footer></article>
+<footer><p>Privacy Notice<img src=https://www.databricks.com/gpcicon_small.png alt=""></footer>
+</body></html>

@@ -11,7 +11,7 @@
 # MAGIC The "Get docs metadata → Store to delta table" step of the Docs Curator. It reads the public
 # MAGIC [docs sitemap](https://docs.databricks.com/aws/en/sitemap.xml), keeps the Declarative Automation
 # MAGIC Bundles and Lakeflow Jobs pages, reads each page's title, description, breadcrumb and last
-# MAGIC updated date, and overwrites the table `docs_metadata` in your schema. The page bodies are
+# MAGIC updated date, and merges them into the table `docs_metadata` in your schema. The page bodies are
 # MAGIC processed in lecture 2, which fills `processed` and `volume_path`.
 
 # COMMAND ----------
@@ -106,12 +106,33 @@ rows = [
 ]
 
 df = spark.createDataFrame(rows, schema=schema)
-df.write.format("delta").mode("overwrite").option("overwriteSchema", "true").saveAsTable(TABLE_NAME)
+if not spark.catalog.tableExists(TABLE_NAME):
+    df.write.format("delta").saveAsTable(TABLE_NAME)
+else:
+    # Merge rather than overwrite: processed and volume_path belong to the page processing of
+    # lecture 2, and a page whose last_updated changes is processed again there. Pages that left
+    # the sitemap are deleted.
+    df.createOrReplaceTempView("fetched_docs_metadata")
+    spark.sql(f"""
+        MERGE INTO {TABLE_NAME} AS target
+        USING fetched_docs_metadata AS source
+        ON target.doc_id = source.doc_id
+        WHEN MATCHED THEN UPDATE SET
+            url = source.url,
+            title = source.title,
+            description = source.description,
+            product_area = source.product_area,
+            breadcrumb = source.breadcrumb,
+            last_updated = source.last_updated,
+            ingestion_timestamp = source.ingestion_timestamp
+        WHEN NOT MATCHED THEN INSERT *
+        WHEN NOT MATCHED BY SOURCE THEN DELETE
+    """)
 spark.sql(
     f"COMMENT ON TABLE {TABLE_NAME} IS 'Metadata of Databricks documentation pages on bundles and jobs, "
     "one row per page, from the docs.databricks.com sitemap'"
 )
-logger.info(f"Wrote {df.count()} rows to {TABLE_NAME}")
+logger.info(f"Merged {df.count()} pages into {TABLE_NAME}")
 
 # COMMAND ----------
 

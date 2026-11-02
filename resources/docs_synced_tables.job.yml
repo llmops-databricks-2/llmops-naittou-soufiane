@@ -1,0 +1,22 @@
+# Syncs docs_chunks to the Lakebase Synced Table docs_chunks_synced (created on the first run), builds
+# its pgvector and full-text indexes, and runs the semantic, filtered and hybrid search comparison
+# (lecture 2.5). Run it after the docs_metadata job has processed new pages.
+resources:
+  jobs:
+    docs_synced_tables:
+      name: job-docs-synced-tables-naittou-soufiane-${bundle.target}
+      budget_policy_id: "674b84ab-63b9-3f87-817d-7ba554be0a99"
+      environments:
+        - environment_key: default
+          spec:
+            environment_version: "6"
+            dependencies:
+              - ../dist/*.whl
+
+      tasks:
+        - task_key: lakebase_synced_tables
+          environment_key: default
+          notebook_task:
+            notebook_path: ../lecture_2/2.5_synced_tables.py
+            base_parameters:
+              env: ${bundle.target}
