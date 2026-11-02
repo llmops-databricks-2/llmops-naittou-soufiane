@@ -281,13 +281,29 @@ Found by running the agent against dev, fixed, and covered by `tests/test_agent.
 
 ### Still open: invented YAML
 
-The agent still writes YAML the docs don't contain when its search misses. Asked for a file-arrival trigger in a
-bundle, it answered `schedule: trigger: file_arrival: path:`, then `schedule: trigger_type: file_arrival:`, then
-`triggers: file_arrival: url:`;
-the right key is `trigger: file_arrival: url:`. The knowledge base has it: `dev-tools/bundles/resources#112` and
-`#114` mention `file_arrival`, in the reference tables. But those chunks have `has_code = false`, and the model
-almost always adds `has_code: true` when a YAML answer is asked for, which filters them out. Telling it so in the
-prompt and in the tool's parameter description helped once in two reruns.
+Asked for a file-arrival trigger in a bundle, the agent wrote YAML the docs don't show, different in each run:
+`schedule: trigger: file_arrival: path:`, then `schedule: trigger_type: file_arrival:`, then
+`triggers: file_arrival: url:`.
+
+What the docs hold: the bundles resource reference lists two job keys, `job.trigger` (a map,
+`dev-tools/bundles/resources#112`) and `job.triggers` (a list, CLI 1.13.0+, `#114`), both with `file_arrival` as a
+"Map" and "See file_arrival" for its fields. That sub-table isn't in our 50 pages, and no chunk of the 823 has
+`file_arrival:` written as YAML. The last variant is close: `triggers` exists, but as a list
+(`triggers: - file_arrival:`), and `url` can't be checked against our pages.
+
+Three gaps add up:
+
+1. **No example in the knowledge base.** The reference tables name the keys but not their fields, and the jobs page
+   describes the UI ("In Storage location, enter the URL…"), not YAML.
+2. **Retrieval hides the reference tables.** They have `has_code = false`, and the model almost always searches with
+   `has_code: true` when a YAML answer is asked for.
+3. **The model fills the gap** with a plausible shape instead of saying it isn't documented: the UI's wording
+   (`path`), the job's `schedule` block it did retrieve, and what it remembers of the Jobs API (`url`). The prompt
+   rule that every key must come from a tool result isn't enforced in code.
+
+Telling it about `has_code` in the prompt and in the tool's parameter description helped once in two reruns. Open
+fixes: keep `has_code` from hiding the reference tables, and add the pages holding the `file_arrival` fields and
+bundle examples.
 
 **Tried and removed: a YAML check in the loop.** Code compared each key of an answer's YAML blocks with the
 turn's tool outputs and sent the answer back once with the missing keys named. It caught the invented keys,
