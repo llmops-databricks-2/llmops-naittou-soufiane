@@ -24,9 +24,9 @@ the course workspace was provisioned for you before you got this repo, and every
 | Your schema in acceptance, which you read | `llmops_acc.naittou_soufiane` |
 | Your schema in production, which you read | `llmops_prd.naittou_soufiane` |
 | Suggested volume name (create during the course) | `docs_files`, such as `llmops_dev.naittou_soufiane.docs_files` |
-| SQL warehouse id | `87247773d98c759b` |
+| SQL warehouse id | `e4a4b5da25b0a0da` |
 | Usage policy id | `674b84ab-63b9-3f87-817d-7ba554be0a99` |
-| MLflow experiments | Dev: `/llmops/naittou_soufiane-dev`; acc: `/llmops/naittou_soufiane-acc`; prd: `/llmops/naittou_soufiane-prd` |
+| MLflow experiments | Dev: `/llmops/naittou-soufiane-dev`; acc: `/llmops/naittou-soufiane-acc`; prd: `/llmops/naittou-soufiane-prd` |
 | Chat model service | `course_ops.gateway.chat` |
 | Embedding model service | `course_ops.gateway.embed` |
 

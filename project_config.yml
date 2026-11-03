@@ -16,8 +16,8 @@ dev:
   # course_ops.gateway.embed can't be used: ai_query doesn't support custom Unity Gateway model
   # services yet (https://docs.databricks.com/aws/en/ai-gateway/query-model-services#limitations)
   embedding_endpoint: "databricks-gte-large-en"
-  warehouse_id: "87247773d98c759b"
-  experiment_path: "/llmops/naittou_soufiane-dev"
+  warehouse_id: "e4a4b5da25b0a0da"
+  experiment_path: "/llmops/naittou-soufiane-dev"
   # Your provisioned Lakebase project.
   lakebase_project_id: "lb-llmops-naittou-soufiane"
 
@@ -30,8 +30,8 @@ acc:
   # course_ops.gateway.embed can't be used: ai_query doesn't support custom Unity Gateway model
   # services yet (https://docs.databricks.com/aws/en/ai-gateway/query-model-services#limitations)
   embedding_endpoint: "databricks-gte-large-en"
-  warehouse_id: "87247773d98c759b"
-  experiment_path: "/llmops/naittou_soufiane-acc"
+  warehouse_id: "e4a4b5da25b0a0da"
+  experiment_path: "/llmops/naittou-soufiane-acc"
   # Your provisioned Lakebase project for this environment.
   lakebase_project_id: "lb-llmops-naittou-soufiane"
 
@@ -44,7 +44,7 @@ prd:
   # course_ops.gateway.embed can't be used: ai_query doesn't support custom Unity Gateway model
   # services yet (https://docs.databricks.com/aws/en/ai-gateway/query-model-services#limitations)
   embedding_endpoint: "databricks-gte-large-en"
-  warehouse_id: "87247773d98c759b"
-  experiment_path: "/llmops/naittou_soufiane-prd"
+  warehouse_id: "e4a4b5da25b0a0da"
+  experiment_path: "/llmops/naittou-soufiane-prd"
   # Your provisioned Lakebase project for this environment.
   lakebase_project_id: "lb-llmops-naittou-soufiane"
